@@ -10,7 +10,7 @@
                  [org.clojure/clojurescript "1.9.542"]
                  [org.clojure/core.async "0.3.442"]
                  [reagent "0.6.1" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server]]
-                 [re-frame "0.9.3"]])
+                 [re-frame "0.10.1"]])
 
 (require
  '[boot-figwheel :refer [figwheel cljs-repl]]
