@@ -1,8 +1,11 @@
 (ns duffers.core
     (:require [reagent.core :as r :refer [atom]]
               [re-frame.core :refer [subscribe dispatch dispatch-sync]]
+              [duffers.db]
+              [duffers.golfers]
               [duffers.handlers]
-              [duffers.subs]))
+              [duffers.subs]
+              [duffers.title]))
 
 (def ReactNative (js/require "react-native"))
 
@@ -17,16 +20,18 @@
   (.alert Alert title))
 
 (defn app-root []
-  (let [greeting (subscribe [:get-greeting])]
+  (let [title (subscribe [:duffers.title/get])
+        golfers (subscribe [:duffers.golfers/get])]
     (fn []
-      [view {:style {:flex-direction "column" :margin 40 :align-items "center"}}
-       [image {:source (js/require "./assets/images/cljs.png")
-               :style {:width 200
-                       :height 200}}]
-       [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} @greeting]
-       [touchable-highlight {:style {:background-color "#999" :padding 10 :border-radius 5}
-                             :on-press #(alert "HELLO!")}
-        [text {:style {:color "white" :text-align "center" :font-weight "bold"}} "press me"]]])))
+      [view {:style {:flex-direction "column" :margin 40}}
+       ;[image {:source (js/require "./assets/images/cljs.png")
+       ;        :style {:width 200
+       ;                :height 200}}]
+       [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} @title]
+       (for [golfer @golfers]
+         [touchable-highlight {:style    {:background-color "#999" :padding 10 :border-radius 5}
+                               :on-press #(alert (str "HELLO " golfer))}
+          [text {:style {:color "white" :text-align "center" :font-weight "bold"}} golfer]])])))
 
 (defn init []
   (dispatch-sync [:initialize-db])
